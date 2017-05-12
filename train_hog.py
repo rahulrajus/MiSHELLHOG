@@ -30,9 +30,8 @@ negative_vector = []
 labels = []#hi teacher
 for i in range(1,16):
     print("/Users/Rahul/Google Drive/Personal_Projects/HOGTurtle/positive/track" +str(i).zfill(4)+".png")
-    img = cv2.imread('/Users/Rahul/Google Drive/Personal_Projects/HOGTurtle/postive/track'+ str(i).zfill(4) + '.png')
+    img = cv2.imread('./postive/track'+ str(i).zfill(4) + '.png')
     img = cv2.resize(img, (128,128))
-
 #i failed my math final
     vctr = get_hog_vector(img)
     print(vctr)
@@ -40,10 +39,8 @@ for i in range(1,16):
     labels.append(1)
 for i in range(1,68):
     print("/Users/Rahul/Google Drive/Personal_Projects/HOGTurtle/positive/track" +str(i).zfill(4)+".png")
-    img = cv2.imread('/Users/Rahul/Google Drive/Personal_Projects/HOGTurtle/negative/negative'+ str(i).zfill(4) + '.png')
+    img = cv2.imread('./negative/negative'+ str(i).zfill(4) + '.png')
     img = cv2.resize(img, (128,128))
-
-
     vctr = get_hog_vector(img)
     negative_vector.append(vctr)
     labels.append(-1)
@@ -52,4 +49,12 @@ print("negatives")
 print(negative_vector)
 train_vect = positive_vector + negative_vector
 clf = svm.SVC()
-clf.fit(train_vect, labels)
+train_vect = np.array(train_vect)
+nsamples, nx, ny = train_vect.shape
+train_vect = train_vect.reshape((nsamples,nx*ny))
+clf.fit(np.array(train_vect), np.array(labels))
+img_test = cv2.imread('./positive/track0001.png')
+img = cv2.resize(img, (128,128))
+#i failed my math final
+vctr = get_hog_vector(img)
+clf.predict(vctr)
